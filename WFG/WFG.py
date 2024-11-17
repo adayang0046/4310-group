@@ -1,6 +1,7 @@
 
 
 # Reference: https://www.geeksforgeeks.org/wait-for-graph-deadlock-detection-in-distributed-system/
+# We can change the format, this is just what seemed easiest so far
 
 def create_graph():
     return {} # empty graph
