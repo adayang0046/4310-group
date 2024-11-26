@@ -2,6 +2,7 @@
 # pip install networkx matplotlib
 import matplotlib.pyplot as plot # type: ignore
 import networkx as nx # type: ignore
+import random
 
 # Reference: https://www.geeksforgeeks.org/wait-for-graph-deadlock-detection-in-distributed-system/
 # Reference for dfs: https://www.geeksforgeeks.org/depth-first-search-or-dfs-for-a-graph/ 
@@ -9,14 +10,32 @@ import networkx as nx # type: ignore
 # The below three methods create_graph, create_edge and delete_edge
 # are for a more dynamic approach
 
-# def create_graph():
-#     return {} # empty graph
+# Function for creating a new graph using networkx direcxted graph funciton
+def create_graph(edges, V):
+    adj = {i : [] for i in range(V)}
+    Graph = nx.DiGraph()
 
-# def create_edge(): # Adding edges to simulate processes waiting on each other
-#     ...
+    for from_node, to_node in edges:
+        create_edge(adj, from_node, to_node)
+        Graph.add_edge(from_node, to_node)
 
-# def delete_edge():
-#     ...
+    return adj, Graph
+
+# Function for adding an edge to the adj list
+def create_edge(adj, from_node, to_node): 
+    if from_node not in adj:
+        adj[from_node]= []
+    if to_node not in adj:
+        adj[to_node] = []
+    
+    adj[from_node].append(to_node)
+
+
+# Function for deleting an edge 
+def delete_edge(adj, from_node, to_node):
+    if from_node < len(adj):
+        if to_node in adj[from_node]:
+            adj[from_node].remove(to_node)
 
 # Function for illustrating the graph
 def draw_graph(adj, deadlock):
@@ -25,7 +44,7 @@ def draw_graph(adj, deadlock):
     Graph = nx.DiGraph()
     
     # Add edges based on adjacency list
-    for process, dependencies in enumerate(adj):
+    for process, dependencies in adj.items():
         for dependency in dependencies:
             Graph.add_edge(process, dependency)
     
@@ -85,32 +104,76 @@ def detect_deadlock(adj, V):
     return False
 
 def main():
-    # Hardcoded example for now -- create dynamic later
+    while True:
+        # Ask the number of vertices and check for invalid input
+        try:
+            V = int(input("Enter the number of vertices (V): "))
+            if V <= 0:
+                raise ValueError("The number of vertices must be positive.")
+            break
+        except ValueError as e:
+            print(f"Invalid input: {e}. Please try again.")
 
-    V = 4  # Number of vertices (processes) - change if processes are added/deleted
+    # Ask if user would like to:
+    # A: auto generate edges
+    # B: input edges in terminal
+    print("\nHow would you like to add edges?\nA: Hve this program to auto-generate edges\nB: Manually input edges")
+    # Collect choice and check for invalid input
+    while True:
+        choice = input("Enter your choice (A/B): ").strip().upper()
+        if choice in ['A', 'B']:
+            break
+        print("Invalid choice. Please enter 'A' or 'B'.")
+    
+    # An empty list for edges
+    edges = []
+    if choice == 'A':
+        # Auto-generate edges
+        num_edges = random.randint(V, V * 2)  # Generate a random number of edges
 
-    # Create an adjacency list for the graph
-    adj = [[] for _ in range(V)]
+        for _ in range(num_edges):
+            from_node = random.randint(0, V - 1)
+            to_node = random.randint(0, V - 1)
+            while from_node == to_node:  # Avoid self-loops
+                to_node = random.randint(0, V - 1)
+            edges.append((from_node, to_node))
 
-    # Define edges representing process dependencies
-    edges = [
-        [0, 1],  # Process 0 waits for Process 1
-        [1, 2],  # Process 1 waits for Process 2
-        [2, 3],  # Process 2 waits for Process 3
-        [3, 0],  # Process 3 waits for Process 0 (cycle)
-        #[4, 5],  # Process 4 waits for Process 5 (no cycle)
-    ]
+        print(f"Generated edges: {edges}")
+    elif choice == 'B':
+        # Manually input edges
+        print("Enter edges in the format 'from_node to_node' (For example: 2 1). \nEnter 'end' to finish.\nNote: Nodes must be within the range of 0 to V-1.\n")
+        while True:
+            edge_input = input("Enter edge: ").strip()
+            if edge_input.lower() == "end":
+                break
+            try:
+                from_node, to_node = map(int, edge_input.split())
+                if from_node < 0 or from_node >= V or to_node < 0 or to_node >= V:
+                    raise ValueError("Nodes must be within the range of 0 to V-1.")
+                edges.append((from_node, to_node))
+            except ValueError as e:
+                print(f"Invalid input: {e}. Please try again.")
 
-    # Populate the adjacency list with edges
-    for e in edges:
-        adj[e[0]].append(e[1])
+
+    adj, Graph = create_graph(edges, V)
+
+    # Print the list
+    print("\nAdjacency List:")
+    for node, dependencies in adj.items():
+        print(f"{node}: {dependencies}")
+
 
     deadlock = None
     if detect_deadlock(adj, V):
         deadlock = "Deadlock detected!"
+        print(f"\n{deadlock}")
     else:
         deadlock = "No deadlock detected."
+        print(f"\n{deadlock}")
 
     draw_graph(adj, deadlock)
+    
+    return
+    
 
 main()
