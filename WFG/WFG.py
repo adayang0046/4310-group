@@ -7,9 +7,6 @@ import random
 # Reference: https://www.geeksforgeeks.org/wait-for-graph-deadlock-detection-in-distributed-system/
 # Reference for dfs: https://www.geeksforgeeks.org/depth-first-search-or-dfs-for-a-graph/ 
 
-# The below three methods create_graph, create_edge and delete_edge
-# are for a more dynamic approach
-
 # Function for creating a new graph using networkx direcxted graph funciton
 def create_graph(edges, V):
     adj = {i : [] for i in range(V)}
@@ -117,7 +114,7 @@ def main():
     # Ask if user would like to:
     # A: auto generate edges
     # B: input edges in terminal
-    print("\nHow would you like to add edges?\nA: Hve this program to auto-generate edges\nB: Manually input edges")
+    print("\nHow would you like to add edges?\nA: Have this program to auto-generate edges\nB: Manually input edges")
     # Collect choice and check for invalid input
     while True:
         choice = input("Enter your choice (A/B): ").strip().upper()
