@@ -87,4 +87,44 @@ def main():
     else:
         print("The system is NOT in a safe state.")
 
-main()
+#function for getting user input
+def get_user_input():
+    #ask user to enter # of processes and # of resource types
+    n = int(input("Enter the number of processes: "))
+    m = int(input("Enter the number of resource types: "))
+
+    #ask user for # of available resources
+    available = list(map(int, input(f"Enter the {m} available resources (space separated): ").split()))
+
+    #ask user for max matrix demand
+    print(f"Enter the maximum demand matrix ({n} processes, {m} resource types):")
+    max_demand = []
+    for i in range(n):
+        max_demand.append(list(map(int, input(f"Enter max demand for process {i} (space separated): ").split())))
+
+    #ask user for allocation matrix
+    print(f"Enter the allocation matrix ({n} processes, {m} resource types):")
+    allocation = []
+    for i in range(n):
+        allocation.append(list(map(int, input(f"Enter allocation for process {i} (space separated): ").split())))
+
+    return n, m, available, max_demand, allocation
+
+
+def main():
+    #user input for processes, resources, and matrices
+    n, m, available, max_demand, allocation = get_user_input()
+
+    #check system safety/safe sequence if appl.
+    is_safe_state, safe_sequence = is_safe(n, m, available, max_demand, allocation)
+
+    #print outcome(if safe>, if unsafe>)
+    if is_safe_state:
+        print("The order of execution (safe sequence) is:", safe_sequence)
+    else:
+        print("The system is NOT in a safe state.")
+
+
+#run main function to use Banker's Algorithm!
+if __name__ == "__main__":
+    main()
