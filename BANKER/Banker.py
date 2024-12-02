@@ -49,7 +49,7 @@ def create_graph(available, max_demand, allocation, n, m):
 
     # Display Safe State Result
     safe_state_message = "The system is in a SAFE state." if is_safe_state else "The system is NOT in a SAFE state."
-    ttk.Label(frame, text="Ststem State:", anchor="center").grid(row=n + 4, column=0, sticky=tk.W, padx=5, pady=5)
+    ttk.Label(frame, text="System State:", anchor="center").grid(row=n + 4, column=0, sticky=tk.W, padx=5, pady=5)
     ttk.Label(frame, text=safe_state_message, anchor="center", foreground="green" if is_safe_state else "red").grid(
         row=n + 4, column=1, sticky=tk.W, padx=5, pady=5
     )
