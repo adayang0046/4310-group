@@ -139,10 +139,11 @@ def main():
     elif choice == 'B':
         # Manually input edges
         print("Enter edges in the format 'from_node to_node' (For example: 2 1). \nEnter 'end' to finish.\nNote: Nodes must be within the range of 0 to V-1.\n")
+        count = 0 # Create count for correct number of inputs
         while True:
+            if count == V:
+                break            
             edge_input = input("Enter edge: ").strip()
-            if edge_input.lower() == "end":
-                break
             try:
                 from_node, to_node = map(int, edge_input.split())
                 if from_node < 0 or from_node >= V or to_node < 0 or to_node >= V:
@@ -150,6 +151,7 @@ def main():
                 edges.append((from_node, to_node))
             except ValueError as e:
                 print(f"Invalid input: {e}. Please try again.")
+            count += 1
 
 
     adj, Graph = create_graph(edges, V)

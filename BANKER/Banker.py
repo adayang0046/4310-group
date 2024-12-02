@@ -1,5 +1,11 @@
 # File for Banker's Algorithm
 # This function calculates the need matrix
+import matplotlib.pyplot as plot # type: ignore
+import networkx as nx # type: ignore
+
+def create_graph(edges, V):
+    ... 
+
 def calculate_need(num_processes, num_resources, max_demand, allocation):
     need_list = []
     for i in range(num_processes):
@@ -54,38 +60,36 @@ def is_safe(num_processes, num_resources, available, max_demand, allocation):
     print("The system is in a safe state.\n")
     return True, safe_sequence
 
+# def main():
+#     # Hardcoded
+#     n = 4  # Number of processes
+#     m = 3  # Number of resource types
 
-def main():
-    # Hardcoded
-    # Example setup this example is given by chatgpt
-    n = 5  # Number of processes
-    m = 3  # Number of resource types
-
-    # Data structures
-    available = [3, 3, 2]  # Available vector (length m)
-    max_demand = [         # Max matrix (n x m)
-        [7, 5, 3],
-        [3, 2, 2],
-        [9, 0, 2],
-        [2, 2, 2],
-        [4, 3, 3]
-    ]
-    allocation = [         
-        [0, 1, 0],
-        [2, 0, 0],
-        [3, 0, 2],
-        [2, 1, 1],
-        [0, 0, 2]
-    ]
+#     # Data structures
+#     available = [3, 3, 2]  # Available vector (length m)
+#     max_demand = [         # Max matrix (n x m)
+#         [7, 5, 3],
+#         [3, 2, 2],
+#         [9, 0, 2],
+#         [2, 2, 2],
+#         [4, 3, 3]
+#     ]
+#     allocation = [         
+#         [0, 1, 0],
+#         [2, 0, 0],
+#         [3, 0, 2],
+#         [2, 1, 1],
+#         [0, 0, 2]
+#     ]
 
 
-    is_safe_state, safe_sequence = is_safe(n, m, available, max_demand, allocation)
+#     is_safe_state, safe_sequence = is_safe(n, m, available, max_demand, allocation)
 
-    # Print results
-    if is_safe_state:
-        print("The order of execute is:", safe_sequence)
-    else:
-        print("The system is NOT in a safe state.")
+#     # Print results
+#     if is_safe_state:
+#         print("The order of execute is:", safe_sequence)
+#     else:
+#         print("The system is NOT in a safe state.")
 
 #function for getting user input
 def get_user_input():
@@ -126,5 +130,4 @@ def main():
 
 
 #run main function to use Banker's Algorithm!
-if __name__ == "__main__":
-    main()
+main()
