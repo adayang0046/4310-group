@@ -1,11 +1,70 @@
 # File for Banker's Algorithm
-# This function calculates the need matrix
-import matplotlib.pyplot as plot # type: ignore
-import networkx as nx # type: ignore
 
-def create_graph(edges, V):
-    ... 
+# Import tkinter which is the interface tool to showcase Banker's
+import tkinter as tk
+from tkinter import ttk
 
+
+def create_graph(available, max_demand, allocation, n, m):
+    # n is number of processes
+    # m is number of resource types
+
+    # Create a Tkinter window
+    root = tk.Tk()
+    root.title("Banker's Algorithm")
+
+    frame = ttk.Frame(root, padding="10")
+    frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+
+    # Create headers for the tables
+    ttk.Label(frame, text="Process", anchor="center").grid(row=0, column=0, padx=5, pady=5)
+    ttk.Label(frame, text="Allocation", anchor="center").grid(row=0, column=1, padx=5)
+    ttk.Label(frame, text="Max Demand", anchor="center").grid(row=0, column=2, padx=5)
+    ttk.Label(frame, text="Available Resources", anchor="center").grid(row=0, column=3, padx=5)
+
+    # Configure grid weights
+    frame.grid_columnconfigure(0, weight=1, uniform="equal")
+    frame.grid_columnconfigure(1, weight=1, uniform="equal")
+    frame.grid_columnconfigure(2, weight=1, uniform="equal")
+    frame.grid_columnconfigure(3, weight=1, uniform="equal")
+
+    # Populate the matrix tables
+    for i in range(n):
+        ttk.Label(frame, text=f"Process {i + 1}", anchor="center").grid(row=i + 1, column=0, padx=5, pady=5)
+        
+        # Allocation matrix 
+        allocation_row = " ".join(str(allocation[i][j]) for j in range(m))
+        ttk.Label(frame, text=allocation_row, anchor="center").grid(row=i + 1, column=1, padx=5, pady=5)
+
+        # Max Demand matrix 
+        max_demand_row = " ".join(str(max_demand[i][j]) for j in range(m))
+        ttk.Label(frame, text=max_demand_row, anchor="center").grid(row=i + 1, column=2, padx=5, pady=5)
+
+    # Available Resources table
+    available_row = " ".join(str(available[j]) for j in range(m))
+    ttk.Label(frame, text=available_row, anchor="center").grid(row=1, column=3, padx=5, pady=5)
+
+    # Check if the system is in a safe state
+    is_safe_state, safe_sequence = is_safe(n, m, available, max_demand, allocation)
+
+    # Display Safe State Result
+    safe_state_message = "The system is in a SAFE state." if is_safe_state else "The system is NOT in a SAFE state."
+    ttk.Label(frame, text="Ststem State:", anchor="center").grid(row=n + 4, column=0, sticky=tk.W, padx=5, pady=5)
+    ttk.Label(frame, text=safe_state_message, anchor="center", foreground="green" if is_safe_state else "red").grid(
+        row=n + 4, column=1, sticky=tk.W, padx=5, pady=5
+    )
+
+    # Display Safe Sequence if in a safe state
+    if is_safe_state:
+        ttk.Label(frame, text="Safe Sequence:", anchor="center").grid(row=n + 5, column=0, sticky=tk.W, padx=5, pady=5)
+        ttk.Label(
+            frame, text=", ".join(f"P{p + 1}" for p in safe_sequence), anchor="center"
+        ).grid(row=n + 5, column=1, sticky=tk.W, padx=5, pady=5)
+
+    # Start tkinter
+    root.mainloop()
+   
+# Method to calculate the need matrix
 def calculate_need(num_processes, num_resources, max_demand, allocation):
     need_list = []
     for i in range(num_processes):
@@ -127,6 +186,8 @@ def main():
         print("The order of execution (safe sequence) is:", safe_sequence)
     else:
         print("The system is NOT in a safe state.")
+
+    create_graph(available, max_demand, allocation, n, m)
 
 
 #run main function to use Banker's Algorithm!
